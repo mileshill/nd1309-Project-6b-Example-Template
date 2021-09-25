@@ -337,7 +337,15 @@ contract SupplyChain {
     )
     {
         // Assign values to the 9 parameters
-
+        itemSKU = items[_sku].sku;
+        itemUPC= items[_sku].upc;
+        productID= items[_sku].productID;
+        productNotes= items[_sku].productNotes;
+        productPrice= items[_sku].productPrice;
+        itemState= items[_sku].itemState;
+        distributorID= items[_sku].distributorID;
+        retailerID= items[_sku].retailerID;
+        consumerID= items[_sku].consumerID;
 
         return
         (
