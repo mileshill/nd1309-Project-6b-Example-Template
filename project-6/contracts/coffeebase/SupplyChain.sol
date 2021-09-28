@@ -159,7 +159,7 @@ contract SupplyChain {
         sku = sku + 1;
 
         // Add the new item as part of Harvest
-        items[sku] = Item({
+        items[_upc] = Item({
         sku : sku,
         upc : _upc,
         ownerID : msg.sender, // Metamask-Ethereum address of the current owner as the product moves through 8 stages
@@ -203,7 +203,7 @@ contract SupplyChain {
         // Update the appropriate fields
         items[_upc].itemState = State.Packed;
         // Emit the appropriate event
-        Packed(_upc);
+        emit Packed(_upc);
     }
 
     // Define a function 'sellItem' that allows a farmer to mark an item 'ForSale'
@@ -337,15 +337,15 @@ contract SupplyChain {
     )
     {
         // Assign values to the 9 parameters
-        itemSKU = items[_sku].sku;
-        itemUPC= items[_sku].upc;
-        productID= items[_sku].productID;
-        productNotes= items[_sku].productNotes;
-        productPrice= items[_sku].productPrice;
-        itemState= items[_sku].itemState;
-        distributorID= items[_sku].distributorID;
-        retailerID= items[_sku].retailerID;
-        consumerID= items[_sku].consumerID;
+        itemSKU = items[_upc].sku;
+        itemUPC= items[_upc].upc;
+        productID= items[_upc].productID;
+        productNotes= items[_upc].productNotes;
+        productPrice= items[_upc].productPrice;
+        itemState= uint(items[_upc].itemState);
+        distributorID= items[_upc].distributorID;
+        retailerID= items[_upc].retailerID;
+        consumerID= items[_upc].consumerID;
 
         return
         (
@@ -360,4 +360,36 @@ contract SupplyChain {
         consumerID
         );
     }
+
+    /// @dev Miles Hill
+    /// @notice Convert State enum to string for easy consumer parsing
+    /// @param _state Current State of the item
+    function stateToString(State _state) private returns (string stateIs){
+        if (_state == State.Harvested) {
+            stateIs = "Harvested";
+        }
+        if (_state == State.Processed){
+            stateIs = "Processed";
+        }
+        if (_state == State.Packed){
+            stateIs = "Packed";
+        }
+        if (_state == State.ForSale){
+            stateIs = "ForSale";
+        }
+        if (_state == State.Sold){
+            stateIs = "Sold";
+        }
+        if (_state == State.Shipped){
+            stateIs = "Shipped";
+        }
+        if (_state == State.Received){
+            stateIs = "Received";
+        }
+        if (_state == State.Purchased){
+            stateIs = "Purchased";
+        }
+    }
 }
+
+
