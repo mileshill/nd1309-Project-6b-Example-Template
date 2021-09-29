@@ -21,6 +21,16 @@ contract('SupplyChain', function(accounts) {
     const retailerID = accounts[3]
     const consumerID = accounts[4]
     const emptyAddress = '0x00000000000000000000000000000000000000'
+    const states = {
+        harvested: 0,
+        processed: 1,
+        packed: 2,
+        forSale: 3,
+        sold: 4,
+        shipped: 5,
+        received: 6,
+        purchased:7
+    }
 
     ///Available Accounts
     ///==================
@@ -66,7 +76,7 @@ contract('SupplyChain', function(accounts) {
         assert.equal(resultBufferOne[5], originFarmInformation, 'Error: Missing or Invalid originFarmInformation')
         assert.equal(resultBufferOne[6], originFarmLatitude, 'Error: Missing or Invalid originFarmLatitude')
         assert.equal(resultBufferOne[7], originFarmLongitude, 'Error: Missing or Invalid originFarmLongitude')
-        assert.equal(resultBufferTwo[5], 0, 'Error: Invalid item State')
+        assert.equal(resultBufferTwo[5], states.harvested, 'Error: Invalid item State')
     })
 
     // 2nd Test
@@ -86,29 +96,26 @@ contract('SupplyChain', function(accounts) {
 
         // Verify the result set
         assert.equal(resultBufferTwo[1], upc, "Error: Invalid Item UPC")
-        assert.equal(resultBufferTwo[5], 1, "Error: Invalid State")
+        assert.equal(resultBufferTwo[5], states.processed, "Error: Invalid State")
         
     })    
 
     // 3rd Test
     it("Testing smart contract function packItem() that allows a farmer to pack coffee", async() => {
         const supplyChain = await SupplyChain.deployed()
-        
-        // Declare and Initialize a variable for event
-        
-        
-        // Watch the emitted event Packed()
-        
 
-        // Mark an item as Packed by calling function packItem()
-        
+        let tx = await supplyChain.packItem(upc)
+        truffleAssert.eventEmitted(tx, "Packed", (ev) => {
+            return ev.upc.toNumber() === upc;
+        })
 
         // Retrieve the just now saved item from blockchain by calling function fetchItem()
-        
+        const resultBufferTwo = await supplyChain.fetchItemBufferTwo.call(upc)
 
         // Verify the result set
-        assert.equal(false, true)
-    })    
+        assert.equal(resultBufferTwo[1], upc, "Error: Invalid Item UPC")
+        assert.equal(resultBufferTwo[5], states.packed, "Error: Invalid State")
+    })
 
     // 4th Test
     it("Testing smart contract function sellItem() that allows a farmer to sell coffee", async() => {
