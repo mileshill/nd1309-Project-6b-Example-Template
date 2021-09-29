@@ -45,49 +45,48 @@ contract('SupplyChain', function(accounts) {
     // 1st Test
     it("Testing smart contract function harvestItem() that allows a farmer to harvest coffee", async() => {
         const supplyChain = await SupplyChain.deployed()
-        
-
         // Watch the emitted event Harvested()
-
         // Mark an item as Harvested by calling function harvestItem()
         let tx = await supplyChain.harvestItem(upc, originFarmerID, originFarmName, originFarmInformation, originFarmLatitude, originFarmLongitude, productNotes)
         truffleAssert.eventEmitted(tx, 'Harvested', (ev) => {
-            return ev.upc === upc;
+            console.log("harvestItem UPC", ev.upc.toNumber(), " UPC: ", upc)
+            return ev.upc.toNumber() === upc;
         })
+
         // Retrieve the just now saved item from blockchain by calling function fetchItem()
         const resultBufferOne = await supplyChain.fetchItemBufferOne.call(upc)
         const resultBufferTwo = await supplyChain.fetchItemBufferTwo.call(upc)
-
+        console.log("Result buffer One: ", resultBufferOne)
         // Verify the result set
-        assert.equal(resultBufferOne[0], sku, 'Error: Invalid item SKU')
+        assert.equal(resultBufferOne[0], 2, 'Error: Invalid item SKU')
         assert.equal(resultBufferOne[1], upc, 'Error: Invalid item UPC')
-        assert.equal(resultBufferOne[2], originFarmerID, 'Error: Missing or Invalid ownerID')
+        assert.equal(resultBufferOne[2], ownerID, 'Error: Missing or Invalid ownerID')
         assert.equal(resultBufferOne[3], originFarmerID, 'Error: Missing or Invalid originFarmerID')
         assert.equal(resultBufferOne[4], originFarmName, 'Error: Missing or Invalid originFarmName')
         assert.equal(resultBufferOne[5], originFarmInformation, 'Error: Missing or Invalid originFarmInformation')
         assert.equal(resultBufferOne[6], originFarmLatitude, 'Error: Missing or Invalid originFarmLatitude')
         assert.equal(resultBufferOne[7], originFarmLongitude, 'Error: Missing or Invalid originFarmLongitude')
         assert.equal(resultBufferTwo[5], 0, 'Error: Invalid item State')
-        assert.equal(eventEmitted, true, 'Invalid event emitted')        
-    })    
+    })
 
     // 2nd Test
     it("Testing smart contract function processItem() that allows a farmer to process coffee", async() => {
         const supplyChain = await SupplyChain.deployed()
         
         // Declare and Initialize a variable for event
-        
-        
         // Watch the emitted event Processed()
-        
-
-        // Mark an item as Processed by calling function processtItem()
-        
+        // Mark an item as Processed by calling function processItem()
+        let tx = await supplyChain.processItem(upc)
+        truffleAssert.eventEmitted(tx, "Processed", (ev) => {
+            return ev.upc.toNumber() === upc;
+        })
 
         // Retrieve the just now saved item from blockchain by calling function fetchItem()
-        
+        const resultBufferTwo = await supplyChain.fetchItemBufferTwo.call(upc)
 
         // Verify the result set
+        assert.equal(resultBufferTwo[1], upc, "Error: Invalid Item UPC")
+        assert.equal(resultBufferTwo[5], 1, "Error: Invalid State")
         
     })    
 
@@ -108,7 +107,7 @@ contract('SupplyChain', function(accounts) {
         
 
         // Verify the result set
-        
+        assert.equal(false, true)
     })    
 
     // 4th Test
@@ -128,8 +127,9 @@ contract('SupplyChain', function(accounts) {
         
 
         // Verify the result set
-          
-    })    
+
+        assert.equal(false, true)
+    })
 
     // 5th Test
     it("Testing smart contract function buyItem() that allows a distributor to buy coffee", async() => {
@@ -149,8 +149,9 @@ contract('SupplyChain', function(accounts) {
         
 
         // Verify the result set
-        
-    })    
+
+        assert.equal(false, true)
+    })
 
     // 6th Test
     it("Testing smart contract function shipItem() that allows a distributor to ship coffee", async() => {
@@ -169,8 +170,9 @@ contract('SupplyChain', function(accounts) {
         
 
         // Verify the result set
-              
-    })    
+
+        assert.equal(false, true)
+    })
 
     // 7th Test
     it("Testing smart contract function receiveItem() that allows a retailer to mark coffee received", async() => {
@@ -189,8 +191,9 @@ contract('SupplyChain', function(accounts) {
         
 
         // Verify the result set
-             
-    })    
+
+        assert.equal(false, true)
+    })
 
     // 8th Test
     it("Testing smart contract function purchaseItem() that allows a consumer to purchase coffee", async() => {
@@ -209,8 +212,9 @@ contract('SupplyChain', function(accounts) {
         
 
         // Verify the result set
-        
-    })    
+
+        assert.equal(false, true)
+    })
 
     // 9th Test
     it("Testing smart contract function fetchItemBufferOne() that allows anyone to fetch item details from blockchain", async() => {
@@ -220,7 +224,8 @@ contract('SupplyChain', function(accounts) {
         
         
         // Verify the result set:
-        
+
+        assert.equal(false, true)
     })
 
     // 10th Test
@@ -231,7 +236,8 @@ contract('SupplyChain', function(accounts) {
         
         
         // Verify the result set:
-        
+
+        assert.equal(false, true)
     })
 
 });
