@@ -325,15 +325,15 @@ contract SupplyChain {
     // Define a function 'fetchItemBufferTwo' that fetches the data
     function fetchItemBufferTwo(uint _upc) public view returns
     (
-        uint itemSKU,
-        uint itemUPC,
-        uint productID,
-        string productNotes,
-        uint productPrice,
-        uint itemState,
-        address distributorID,
-        address retailerID,
-        address consumerID
+        uint itemSKU, // 0
+        uint itemUPC, // 1
+        uint productID, // 2
+        string productNotes, // 3
+        uint productPrice, // 4
+        uint itemState, // 5
+        address distributorID, // 6
+        address retailerID, // 7
+        address consumerID // 8
     )
     {
         // Assign values to the 9 parameters
