@@ -182,22 +182,17 @@ contract('SupplyChain', function(accounts) {
     // 7th Test
     it("Testing smart contract function receiveItem() that allows a retailer to mark coffee received", async() => {
         const supplyChain = await SupplyChain.deployed()
-        
-        // Declare and Initialize a variable for event
-        
-        
-        // Watch the emitted event Received()
-        
-
-        // Mark an item as Sold by calling function buyItem()
-        
-
+        let tx = await supplyChain.receiveItem(upc, {from: retailerID, gasPrice: 0})
+        truffleAssert.eventEmitted(tx, "Received", (ev) => {
+            return ev.upc.toNumber() === upc;
+        })
         // Retrieve the just now saved item from blockchain by calling function fetchItem()
-        
+        const resultBufferTwo = await supplyChain.fetchItemBufferTwo.call(upc)
 
         // Verify the result set
-
-        assert.equal(false, true)
+        assert.equal(resultBufferTwo[1], upc, "Error: Invalid Item UPC")
+        assert.equal(resultBufferTwo[5], states.received, "Error: Invalid State")
+        assert.equal(resultBufferTwo[7], retailerID, "Error: Invalid Retailer ID")
     })
 
     // 8th Test
