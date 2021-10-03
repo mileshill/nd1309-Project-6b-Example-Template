@@ -61,6 +61,7 @@ contract SupplyChain {
     event Shipped(uint upc);
     event Received(uint upc);
     event Purchased(uint upc);
+    event Deleted(uint upc);
 
     // Define a modifer that checks to see if msg.sender == owner of the contract
     modifier onlyOwner() {
@@ -85,7 +86,7 @@ contract SupplyChain {
         _;
         uint _price = items[_upc].productPrice;
         uint amountToReturn = msg.value - _price;
-        items[_upc].consumerID.transfer(amountToReturn);
+        msg.sender.transfer(amountToReturn);
     }
 
     // Define a modifier that checks if an item.state of a upc is Harvested
@@ -251,7 +252,7 @@ contract SupplyChain {
         verifyCaller(items[_upc].distributorID)
     {
         // Update the appropriate fields
-        items[_upc].itemState = State.Sold;
+        items[_upc].itemState = State.Shipped;
         // Emit the appropriate event
         emit Shipped(_upc);
     }
@@ -284,6 +285,11 @@ contract SupplyChain {
         items[_upc].itemState = State.Purchased;
         // Emit the appropriate event
         emit Purchased(_upc);
+    }
+
+    function deleteItem(uint _upc) public onlyOwner {
+        delete items[_upc];
+        emit Deleted(_upc);
     }
 
     // Define a function 'fetchItemBufferOne' that fetches the data
