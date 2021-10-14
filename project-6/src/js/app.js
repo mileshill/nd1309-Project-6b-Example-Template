@@ -1,4 +1,5 @@
 App = {
+    web3: null,
     web3Provider: null,
     contracts: {},
     emptyAddress: "0x0000000000000000000000000000000000000000",
@@ -56,6 +57,7 @@ App = {
     },
 
     initWeb3: async function () {
+        console.log("iniWeb3 - START")
         /// Find or Inject Web3 Provider
         /// Modern dapp browsers...
         if (window.ethereum) {
@@ -79,11 +81,13 @@ App = {
 
         App.getMetaskAccountID();
 
+        console.log("iniWeb3 - END")
         return App.initSupplyChain();
     },
 
     getMetaskAccountID: function () {
-        web3 = new Web3(App.web3Provider);
+        console.log("getMetaskAccountID - START")
+        let web3 = new Web3(App.web3Provider);
 
         // Retrieving accounts
         web3.eth.getAccounts(function(err, res) {
@@ -95,25 +99,26 @@ App = {
             App.metamaskAccountID = res[0];
 
         })
+        console.log("getMetaskAccountID - END")
     },
 
     initSupplyChain: function () {
+        console.log("initSupplyChain - START")
         /// Source the truffle compiled smart contracts
         var jsonSupplyChain='../../build/contracts/SupplyChain.json';
-        
+
         /// JSONfy the smart contracts
         $.getJSON(jsonSupplyChain, function(data) {
-            console.log('data',data);
             var SupplyChainArtifact = data;
             App.contracts.SupplyChain = TruffleContract(SupplyChainArtifact);
             App.contracts.SupplyChain.setProvider(App.web3Provider);
-            
             App.fetchItemBufferOne();
             App.fetchItemBufferTwo();
             App.fetchEvents();
 
         });
 
+        console.log("initSupplyChain - END")
         return App.bindEvents();
     },
 

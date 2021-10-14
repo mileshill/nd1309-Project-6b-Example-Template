@@ -53,7 +53,7 @@
             <br>
             <input type="text" id="originFarmLongitude" name="originFarmLongitude" value="144.341490"><br>
             <br>
-            <button class="btn-harvest" id="button" type="button" data-id="1">Harvest</button>
+            <button class="btn-harvest" id="button" type="button" data-id="1" onClick="App.harvestItem">Harvest</button>
             <button class="btn-process" id="button" type="button" data-id="2">Process</button>
             <button class="btn-pack" id="button" type="button" data-id="3">Pack</button>
             <button class="btn-forsale" id="button" type="button" data-id="4">ForSale</button>
@@ -75,8 +75,7 @@
             Retailer ID
             <br>
             <input type="text" id="retailerID" name="retailerID" value="0x0fb2bfefd526966c87efa19f6693d50971763fc2"
-                size="50"><br>
-            Distributor ID
+                size="50"><bristributor ID
             <br>
             <input type="text" id="consumerID" name="consumerID" value="0x5d777e9127b28fb119e81a6304278a0a21bef1c4"
                 size="50"><br>
@@ -100,7 +99,7 @@
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <!-- <script src="js/web3.min.js"></script> -->
+    <script src="js/web3.min.js"></script>
     <script src="js/truffle-contract.js"></script>
     <script src="js/app.js"></script>
 </body>
