@@ -6,7 +6,7 @@ App = {
     sku: 0,
     upc: 0,
     metamaskAccountID: "0x0000000000000000000000000000000000000000",
-    ownerID: "0x0000000000000000000000000000000000000000",
+    ownerID: "0x56c6595dC06a34a1677eD8770b6E1c7920ABb68f",
     originFarmerID: "0x0000000000000000000000000000000000000000",
     originFarmName: null,
     originFarmInformation: null,
@@ -25,6 +25,7 @@ App = {
     },
 
     readForm: function () {
+        console.log("readForm...")
         App.sku = $("#sku").val();
         App.upc = $("#upc").val();
         App.ownerID = $("#ownerID").val();
@@ -40,27 +41,27 @@ App = {
         App.consumerID = $("#consumerID").val();
 
         console.log(
-            App.sku,
-            App.upc,
-            App.ownerID, 
-            App.originFarmerID, 
-            App.originFarmName, 
-            App.originFarmInformation, 
-            App.originFarmLatitude, 
-            App.originFarmLongitude, 
-            App.productNotes, 
-            App.productPrice, 
-            App.distributorID, 
-            App.retailerID, 
-            App.consumerID
+            "sku: ", App.sku, "\n",
+            "upc: ", App.upc, "\n",
+            "ownerID: ", App.ownerID,  "\n",
+            "originFarmerID: ", App.originFarmerID,  "\n",
+            "originFarmName: ", App.originFarmName,  "\n",
+            "originFarmInformation: ", App.originFarmInformation, "\n",
+            "originFarmLatitude: ", App.originFarmLatitude,  "\n",
+            "originFarmLongitude: ", App.originFarmLongitude,  "\n",
+            "productNotes: ", App.productNotes,  "\n",
+            "productPrice: ", App.productPrice,  "\n",
+            "distributorID: ", App.distributorID,  "\n",
+            "retailerID: ", App.retailerID,  "\n",
+            "consuemrID: ", App.consumerID,"\n",
         );
     },
 
     initWeb3: async function () {
-        console.log("iniWeb3 - START")
         /// Find or Inject Web3 Provider
         /// Modern dapp browsers...
-        if (window.ethereum) {
+        //if (window.ethereum) {
+        if (false) {
             App.web3Provider = window.ethereum;
             try {
                 // Request account access
@@ -76,17 +77,15 @@ App = {
         }
         // If no injected web3 instance is detected, fall back to Ganache
         else {
-            App.web3Provider = new Web3.providers.HttpProvider('http://localhost:7545');
+            App.web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');
         }
 
         App.getMetaskAccountID();
 
-        console.log("iniWeb3 - END")
         return App.initSupplyChain();
     },
 
     getMetaskAccountID: function () {
-        console.log("getMetaskAccountID - START")
         let web3 = new Web3(App.web3Provider);
 
         // Retrieving accounts
@@ -95,15 +94,12 @@ App = {
                 console.log('Error:',err);
                 return;
             }
-            console.log('getMetaskID:',res);
             App.metamaskAccountID = res[0];
-
+            console.log("metamaskAccountID: ", res[0])
         })
-        console.log("getMetaskAccountID - END")
     },
 
     initSupplyChain: function () {
-        console.log("initSupplyChain - START")
         /// Source the truffle compiled smart contracts
         var jsonSupplyChain='../../build/contracts/SupplyChain.json';
 
@@ -118,7 +114,6 @@ App = {
 
         });
 
-        console.log("initSupplyChain - END")
         return App.bindEvents();
     },
 
@@ -128,11 +123,11 @@ App = {
 
     handleButtonClick: async function(event) {
         event.preventDefault();
+        App.readForm()
 
         App.getMetaskAccountID();
-
         var processId = parseInt($(event.target).data('id'));
-        console.log('processId',processId);
+        console.log("hanndleButtonClick - processID: ", processId)
 
         switch(processId) {
             case 1:
@@ -170,13 +165,21 @@ App = {
 
     harvestItem: function(event) {
         event.preventDefault();
-        var processId = parseInt($(event.target).data('id'));
 
         App.contracts.SupplyChain.deployed().then(function(instance) {
+            console.log("instance: ", instance)
+            console.log(
+                "UPC: ", App.upc, "\n",
+                "OriginFarmerID: ", App.metamaskAccountID, "\n",
+                "OriginFarmInformation: ", App.originFarmInformation, "\n",
+                "OriginFarmLatitude: " , App.originFarmLatitude, "\n",
+                "OriginFarmLongitude: ", App.originFarmLongitude, "\n",
+                "Product Notes: ", App.productNotes
+            )
             return instance.harvestItem(
-                App.upc, 
-                App.metamaskAccountID, 
-                App.originFarmName, 
+                App.upc,
+                App.metamaskAccountID, // originFarmerID
+                App.originFarmName,
                 App.originFarmInformation, 
                 App.originFarmLatitude, 
                 App.originFarmLongitude, 
@@ -184,9 +187,9 @@ App = {
             );
         }).then(function(result) {
             $("#ftc-item").text(result);
-            console.log('harvestItem',result);
+            console.log('harvestItem promise result:',result);
         }).catch(function(err) {
-            console.log(err.message);
+            console.error("ERROR: harvestItem: ", err.message)
         });
     },
 
@@ -230,7 +233,7 @@ App = {
             $("#ftc-item").text(result);
             console.log('sellItem',result);
         }).catch(function(err) {
-            console.log(err.message);
+            console.error(err.message);
         });
     },
 
