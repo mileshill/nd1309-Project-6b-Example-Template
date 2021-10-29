@@ -295,6 +295,7 @@ contract SupplyChain {
     // Define a function 'fetchItemBufferOne' that fetches the data
     function fetchItemBufferOne(uint _upc) public view returns
     (
+
         uint itemSKU,
         uint itemUPC,
         address ownerID,
